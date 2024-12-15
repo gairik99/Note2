@@ -1,22 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { useGroup } from "../context/groupContext";
 import { useModal } from "../context/modalContext";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-const Sidebar = () => {
-    const [selectedId, setSelectedId] = useState(null);
+
+const Sidebar = ({ id }) => {
+    const [selectedId, setSelectedId] = useState(id);
     const { group } = useGroup();
     const { setModal } = useModal();
     const navigate = useNavigate();
     const handleClick = (id) => {
-        setSelectedId(id);
-        navigate(`/notes/${id}`);
+        setSelectedId(() => id);
+        // navigate(`/notes/${selectedId}`);
     };
+    useEffect(() => {
+        if (selectedId !== undefined) {
+            navigate(`/notes/${selectedId}`);
+        }
+    }, [selectedId]);
     const handleButtonClick = () => {
         setModal(() => true);
     };
-    // console.log(modal)
+    const handleHomePage = () => {
+        navigate('/')
+    }
     return (
         <div
             style={{
@@ -30,14 +37,15 @@ const Sidebar = () => {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    color: 'gold',
+                    color: '#18181b',
                     margin: 0,
                     height: '4rem',
                     textAlign: 'center',
                     fontSize: '2rem'
                 }}
+                onClick={handleHomePage}
             >
-                <Link to="/" style={{ color: 'gold', textDecoration: 'none' }}>Pocket Note</Link>
+                Pocket Note
             </h1 >
             <ul style={{
                 maxHeight: "calc(100vh - 6rem)", // Adjust height to leave space for header
@@ -54,8 +62,8 @@ const Sidebar = () => {
                             height: "5rem",
                             padding: "0.5rem",
                             display: "flex",
-                            background: id === selectedId ? "#f0f8ff" : "transparent",
-                            borderRadius: id === selectedId ? "0 5% 5% 0" : "",
+                            background: id == selectedId ? "#f0f8ff" : "transparent",
+                            borderRadius: id == selectedId ? "0 5% 5% 0" : "",
                             cursor: "pointer",
                             overflow: "hidden",
 
@@ -64,14 +72,16 @@ const Sidebar = () => {
                     >
                         <p
                             style={{
-                                height: "4rem",
-                                width: "4rem",
-                                padding: "1.3rem",
+                                height: "8vh",
+                                width: "8vh",
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
                                 border: "1px solid white",
                                 borderRadius: "100%",
                                 background: color,
                                 color: "white",
-                                fontSize: '1.1rem',
+                                fontSize: '1.4vw',
                                 fontWeight: 'bold'
                             }}
                         >
@@ -82,7 +92,9 @@ const Sidebar = () => {
                                 display: "inline-block",
                                 marginLeft: "0.5rem",
                                 padding: "1.2rem",
-                                fontSize: "1.5rem",
+                                fontSize: "1rem",
+                                fontWeight: 'bold',
+                                color: '#18181b'
                             }}
                         >
                             {fname.substring(0, 25)}

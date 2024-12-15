@@ -13,7 +13,14 @@ const CreateGroupModal = () => {
     };
     const handleInputChange = (e) => {
         let v = e.target.value.trim();
-        let nm = v[0] + v[v.length - 1];
+        let nm = '';
+        let index = Math.floor(Math.random() * (v.length - 1)) + 1;
+        if (v[index] == ' ')
+            nm = v[0] + v[v.length - 1];
+        else
+            nm = v[0] + v[index];
+
+        // console.log('index...', index)
         if (v.length < 2) {
             return;
         }
@@ -37,7 +44,7 @@ const CreateGroupModal = () => {
             return;
         }
     }
-    console.log(group)
+    // console.log(group)
     return (
         <div
             style={{

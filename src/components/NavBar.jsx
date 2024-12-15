@@ -7,17 +7,17 @@ const NavBar = ({ id }) => {
 
     useEffect(() => {
         const nGroup = group[id - 1];
-        setNewGroup((prev) => nGroup);
+        setNewGroup(() => nGroup);
     }, [id]);
 
-    console.log(newGroup);
+    // console.log(newGroup);
     return (
         <div style={{
             height: '8%',
             background: 'blue',
             display: 'flex',
             alignItems: 'center',
-            padding: '0 1rem'
+            padding: '0.2%'
         }}>
             <div style={{
                 background: newGroup.color,
@@ -25,10 +25,11 @@ const NavBar = ({ id }) => {
                 width: '5%',
                 borderRadius: '50%',
                 color: 'white',
-                fontSize: '1.5rem',
+                fontSize: '1.5vw',
                 justifyContent: 'center',
                 alignItems: 'center',
-                display: 'flex'
+                display: 'flex',
+                marginLeft: '1rem'
             }}>
                 {newGroup?.sname?.toUpperCase()}
             </div>

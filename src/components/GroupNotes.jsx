@@ -19,7 +19,21 @@ const GroupNotes = ({ id }) => {
     }
     const handleCreateNote = () => {
         if (notes.note?.trim().length > 0) {
-            setNote((prev) => [...prev, notes]);
+            const date = new Date();
+            const day = date.getDate();
+            const month = date.toLocaleString('en-US', { month: 'short' });
+            const year = date.getFullYear();
+            const formattedDate = `${day} ${month} ${year}`;
+            // ......format for time.....
+            const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
+            const formattedTime = new Date().toLocaleTimeString('en-US', timeOptions);
+            const newNote = {
+                ...notes,
+                date: formattedDate,
+                time: formattedTime,
+            };
+
+            setNote((prev) => [...prev, newNote]);
             setNotes({ ...notes, note: '' });
         }
     };
@@ -41,7 +55,7 @@ const GroupNotes = ({ id }) => {
         < div style={{ width: '100%', height: '92%', background: '#f5f5f4', position: 'relative' }}>
             <div style={{ width: '70vw', height: '76vh', overflowY: 'auto', }}>
                 {groupNote.length > 0 ? (
-                    groupNote.map(({ note }, index) => (
+                    groupNote.map(({ note, date, time }, index) => (
                         <div
                             key={index}
                             style={{
@@ -52,9 +66,22 @@ const GroupNotes = ({ id }) => {
                                 boxShadow: '0 0 10px rgba(17, 233, 100, 0.2)',
                                 background: '#fafafa',
                                 color: '#262626',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
                             }}
                         >
-                            <p style={{ padding: '0.5rem', fontSize: '1.2rem' }}>{note}</p>
+                            <p style={{ padding: '0.5rem', fontSize: '1.2rem', flex: 1 }}>{note}</p>
+                            <p
+                                style={{
+                                    fontSize: '0.8rem',
+                                    color: '#555',
+                                    margin: '0.5rem',
+                                    textAlign: 'right',
+                                }}
+                            >
+                                {date} • {time}
+                            </p>
                         </div>
                     ))
                 ) : (
