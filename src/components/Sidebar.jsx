@@ -59,9 +59,11 @@ const Sidebar = ({ id }) => {
                         key={id}
                         style={{
                             margin: "1px",
-                            height: "5rem",
+                            height: "10vh",
                             padding: "0.5rem",
                             display: "flex",
+                            // justifyContent: 'center',
+                            alignItems: 'center',
                             background: id == selectedId ? "#f0f8ff" : "transparent",
                             borderRadius: id == selectedId ? "0 5% 5% 0" : "",
                             cursor: "pointer",
@@ -73,11 +75,11 @@ const Sidebar = ({ id }) => {
                         <p
                             style={{
                                 height: "8vh",
-                                width: "8vh",
+                                width: "4vw",
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                border: "1px solid white",
+                                border: "5px solid white",
                                 borderRadius: "100%",
                                 background: color,
                                 color: "white",
@@ -94,7 +96,7 @@ const Sidebar = ({ id }) => {
                                 padding: "1.2rem",
                                 fontSize: "1rem",
                                 fontWeight: 'bold',
-                                color: '#18181b'
+                                color: id == selectedId ? "#525252" : "",
                             }}
                         >
                             {fname.substring(0, 25)}
@@ -108,8 +110,8 @@ const Sidebar = ({ id }) => {
                     height: "4rem",
                     width: "4rem",
                     position: "fixed",
-                    top: "90%",
-                    left: "20%",
+                    top: "84vh",
+                    left: "20vw",
                     background: "blue",
                     borderRadius: "100%",
                     cursor: 'pointer',

@@ -23,6 +23,7 @@ const NavBar = ({ id }) => {
                 background: newGroup.color,
                 height: '90%',
                 width: '5%',
+                border: "2px solid white",
                 borderRadius: '50%',
                 color: 'white',
                 fontSize: '1.5vw',

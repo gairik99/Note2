@@ -5,6 +5,8 @@ import { GroupProvider } from './context/groupContext.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { NoteProvider } from './context/noteContext.jsx'
 import { ModalProvider } from './context/modalContext.jsx'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -12,6 +14,7 @@ createRoot(document.getElementById('root')).render(
       <NoteProvider>
         <ModalProvider>
           <App />
+          <ToastContainer />
         </ModalProvider>
       </NoteProvider>
     </GroupProvider>

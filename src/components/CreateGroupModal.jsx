@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGroup } from "../context/groupContext";
 import { useModal } from "../context/modalContext";
+import { toast } from "react-toastify";
 
 const CreateGroupModal = () => {
     let colors = ['#B38BFA', '#FF79F2', '#43E6FC', '#F19576', '#0047FF', '#6691FF'];
@@ -39,10 +40,17 @@ const CreateGroupModal = () => {
         if (val.sname && val.fname && val.color) {
             setGroup((prevgroup) => [...prevgroup, val])
             setModal(false);
+            toast.success('Group has created')
         }
         else {
-            return;
+            if (!val.fname) {
+                toast.warning('Group Name must contain two characters')
+            }
+            if (!val.color) {
+                toast.warning('Group Must have a color')
+            }
         }
+
     }
     // console.log(group)
     return (
@@ -92,6 +100,7 @@ const CreateGroupModal = () => {
                         }}
                         onChange={handleInputChange}
                     />
+
                 </label>
                 <div style={{ width: '100%', display: 'flex', gap: '0.5rem', marginTop: '1.5rem', flexWrap: 'wrap' }}>
                     <span style={{ padding: '0.2rem' }}>Choose color</span>
