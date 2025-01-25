@@ -37,7 +37,11 @@ const CreateSignUpModal = () => {
             toast.error("Invalid email address");
             return false;
         }
-
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            toast.error("Password must be at least 8 characters long and contain at least one letter, one number, and one special character");
+            return false;
+        }
         if (password !== confirmPassword) {
             toast.error("Passwords do not match");
             return false;
