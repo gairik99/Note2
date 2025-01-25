@@ -1,6 +1,10 @@
 import Sidebar from "../components/Sidebar"
 import { useModal } from "../context/modalContext"
 import CreateGroupModal from "../components/CreateGroupModal";
+import NavBar from "../components/NavBar";
+import CreateSignUpModal from "../components/CreateSignUpModal";
+import CreateSignInModal from "../components/CreateSignInModal";
+import CreateSignoutModal from "../components/CreateSignoutModal";
 
 const Home = () => {
     const { modal } = useModal();
@@ -9,6 +13,7 @@ const Home = () => {
             <div style={{ display: 'flex', width: '100%', height: '100%' }}>
                 <Sidebar />
                 <div style={{ width: '70%', height: '100%', overflow: 'hidden' }}>
+                    <NavBar />
                     <img
                         src="home.png"
                         alt="home"
@@ -20,7 +25,10 @@ const Home = () => {
                     />
                 </div>
             </div>
-            {modal && <CreateGroupModal />}
+            {modal.groupModal && <CreateGroupModal />}
+            {modal.signupModal && <CreateSignUpModal />}
+            {modal.signinModal && <CreateSignInModal />}
+            {modal.signoutModal && <CreateSignoutModal />}
         </div>
     )
 }

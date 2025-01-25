@@ -1,16 +1,23 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
 import { useGroup } from "../context/groupContext";
 import { useModal } from "../context/modalContext";
-import { toast } from "react-toastify";
+import { useAuth } from "../context/authContext";
 
 const CreateGroupModal = () => {
     let colors = ['#B38BFA', '#FF79F2', '#43E6FC', '#F19576', '#0047FF', '#6691FF'];
     const [val, setVal] = useState({});
     const [selectedColor, setSelectedColor] = useState(null);
+    const [loading, setLoading] = useState(false);
     const { setModal } = useModal();
-    const { group, setGroup } = useGroup();
-    const handleClick = () => {
-        setModal(false);
+    const { setGroup, group } = useGroup();
+    const { user } = useAuth();
+    const handleClick = (e) => {
+        setModal((prevModal) => ({
+            ...prevModal,
+            groupModal: false
+        }));
     };
     const handleInputChange = (e) => {
         let v = e.target.value.trim();
@@ -26,7 +33,7 @@ const CreateGroupModal = () => {
             return;
         }
         else {
-            setVal({ ...val, fname: v, sname: nm, id: group.length + 1 })
+            setVal({ ...val, fname: v, sname: nm })
         }
 
     }
@@ -36,18 +43,47 @@ const CreateGroupModal = () => {
         setVal({ ...val, color: color });
     };
 
-    const handleButtonClick = () => {
+    const handleButtonClick = async () => {
         if (val.sname && val.fname && val.color) {
-            setGroup((prevgroup) => [...prevgroup, val])
-            setModal(false);
-            toast.success('Group has created')
-        }
-        else {
+            setLoading(true);
+            try {
+                const payload = {
+                    fname: val.fname,
+                    sname: val.sname,
+                    color: val.color,
+                    // Generate a unique ID for the group
+                };
+
+                const response = await axios.patch(
+                    "https://note2-backend.onrender.com/api/v1/users/addGroup",
+                    payload,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${user.token}`, // Pass user token for authentication
+                        },
+                    }
+                );
+                // console.log(response);
+
+                if (response.data.status === "ok") {
+                    toast.success("Group has been created");
+                    setGroup(prevGroup => ([...prevGroup, response.data.data]));
+                    setModal((prevModal) => ({ ...prevModal, groupModal: false }));
+                } else {
+                    toast.error(response.data.message || "Something went wrong");
+                }
+            } catch (error) {
+                toast.error(error.response?.data?.message || "Network error");
+            }
+            finally {
+                setLoading(false); // Reset loading state
+            }
+        } else {
             if (!val.fname) {
-                toast.warning('Group Name must contain two characters')
+                toast.warning("Group Name must contain two characters");
             }
             if (!val.color) {
-                toast.warning('Group Must have a color')
+                toast.warning("Group Must have a color");
             }
         }
 
@@ -133,9 +169,10 @@ const CreateGroupModal = () => {
                         border: 'none',
                         cursor: 'pointer',
                     }}
+                    disabled={loading}
                     onClick={handleButtonClick}
                 >
-                    Create
+                    {loading ? "Creating..." : "Create"}
                 </button>
             </div>
         </div>

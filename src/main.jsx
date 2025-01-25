@@ -5,18 +5,21 @@ import { GroupProvider } from './context/groupContext.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { NoteProvider } from './context/noteContext.jsx'
 import { ModalProvider } from './context/modalContext.jsx'
+import { AuthProvider } from './context/authContext.jsx'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <GroupProvider>
-      <NoteProvider>
-        <ModalProvider>
-          <App />
-          <ToastContainer />
-        </ModalProvider>
-      </NoteProvider>
-    </GroupProvider>
+    <AuthProvider>
+      <GroupProvider>
+        <NoteProvider>
+          <ModalProvider>
+            <App />
+            <ToastContainer />
+          </ModalProvider>
+        </NoteProvider>
+      </GroupProvider>
+    </AuthProvider>
   </BrowserRouter>
 )

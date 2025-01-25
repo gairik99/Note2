@@ -5,7 +5,12 @@ import { createContext, useContext, useState } from "react";
 const ModalContext = createContext();
 // eslint-disable-next-line react/prop-types
 const ModalProvider = ({ children }) => {
-    const [modal, setModal] = useState(false);
+    const [modal, setModal] = useState({
+        groupModal: false,
+        signupModal: false,
+        signinModal: false,
+        signoutModal: false,
+    });
     return (
         <ModalContext.Provider value={{ modal, setModal }}>
             {children}

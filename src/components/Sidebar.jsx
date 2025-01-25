@@ -1,13 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useGroup } from "../context/groupContext";
 import { useModal } from "../context/modalContext";
-import { useState, useEffect } from "react";
+import { useAuth } from "../context/authContext";
 
 
 const Sidebar = ({ id }) => {
     const [selectedId, setSelectedId] = useState(id);
     const { group } = useGroup();
     const { setModal } = useModal();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const handleClick = (id) => {
         setSelectedId(() => id);
@@ -19,11 +21,24 @@ const Sidebar = ({ id }) => {
         }
     }, [selectedId]);
     const handleButtonClick = () => {
-        setModal(() => true);
+        if (user?.token) {
+            setModal((prevModal) => ({
+                ...prevModal,
+                groupModal: true
+            }));
+        }
+        else {
+            setModal((prevModal) => ({
+                ...prevModal,
+                signinModal: true
+            }));
+        }
+
     };
     const handleHomePage = () => {
         navigate('/')
     }
+    // console.log("group", group);
     return (
         <div
             style={{
@@ -54,55 +69,56 @@ const Sidebar = ({ id }) => {
                 margin: "0",
                 listStyle: "none", // Removes default bullet points
             }}>
-                {group.map(({ id, sname, fname, color }) => (
-                    <li
-                        key={id}
-                        style={{
-                            margin: "1px",
-                            height: "10vh",
-                            padding: "0.5rem",
-                            display: "flex",
-                            // justifyContent: 'center',
-                            alignItems: 'center',
-                            background: id == selectedId ? "#f0f8ff" : "transparent",
-                            borderRadius: id == selectedId ? "0 5% 5% 0" : "",
-                            cursor: "pointer",
-                            overflow: "hidden",
-
-                        }}
-                        onClick={() => handleClick(id)}
-                    >
-                        <p
+                {
+                    user?.token ? group.map(({ _id, sname, fname, color }) => (
+                        <li
+                            key={_id}
                             style={{
-                                height: "8vh",
-                                width: "4vw",
-                                display: 'flex',
-                                justifyContent: 'center',
+                                margin: "1px",
+                                height: "10vh",
+                                padding: "0.5rem",
+                                display: "flex",
+                                // justifyContent: 'center',
                                 alignItems: 'center',
-                                border: "5px solid white",
-                                borderRadius: "100%",
-                                background: color,
-                                color: "white",
-                                fontSize: '1.4vw',
-                                fontWeight: 'bold'
+                                background: _id == selectedId ? "#f0f8ff" : "transparent",
+                                borderRadius: _id == selectedId ? "0 5% 5% 0" : "",
+                                cursor: "pointer",
+                                overflow: "hidden",
+
                             }}
+                            onClick={() => handleClick(_id)}
                         >
-                            {sname.toUpperCase()}
-                        </p>{" "}
-                        <div
-                            style={{
-                                display: "inline-block",
-                                marginLeft: "0.5rem",
-                                padding: "1.2rem",
-                                fontSize: "1rem",
-                                fontWeight: 'bold',
-                                color: id == selectedId ? "#525252" : "",
-                            }}
-                        >
-                            {fname.substring(0, 25)}
-                        </div>
-                    </li>
-                ))}
+                            <p
+                                style={{
+                                    height: "8vh",
+                                    width: "4vw",
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    border: "5px solid white",
+                                    borderRadius: "100%",
+                                    background: color,
+                                    color: "white",
+                                    fontSize: '1.4vw',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                {sname.toUpperCase()}
+                            </p>
+                            <div
+                                style={{
+                                    display: "inline-block",
+                                    marginLeft: "0.5rem",
+                                    padding: "1.2rem",
+                                    fontSize: "1rem",
+                                    fontWeight: 'bold',
+                                    color: id == selectedId ? "#525252" : "",
+                                }}
+                            >
+                                {fname.substring(0, 25)}
+                            </div>
+                        </li>
+                    )) : ""}
             </ul>
             <button
                 style={{
