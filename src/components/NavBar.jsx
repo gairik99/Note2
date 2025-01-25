@@ -22,15 +22,16 @@ const NavBar = ({ id }) => {
         return () => clearInterval(intervalId); // Cleanup interval on component unmount
     }, [id]);
 
-    const formattedDateTime = dateTime.toLocaleString("en-US", {
+    const formattedDateTime = `${dateTime.toLocaleDateString("en-US", {
         weekday: "long",
         year: "numeric",
         month: "long",
         day: "numeric",
+    })} \u00A0\u00A0\u00A0 ${dateTime.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-    });
+    })}`;
 
     return (
         <div style={{

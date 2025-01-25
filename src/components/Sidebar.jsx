@@ -42,7 +42,7 @@ const Sidebar = ({ id }) => {
     return (
         <div
             style={{
-                width: "30%",
+                width: "25%",
                 height: "100%",
                 position: "relative",
             }}

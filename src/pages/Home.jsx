@@ -12,7 +12,7 @@ const Home = () => {
         <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
             <div style={{ display: 'flex', width: '100%', height: '100%' }}>
                 <Sidebar />
-                <div style={{ width: '70%', height: '100%', overflow: 'hidden' }}>
+                <div style={{ width: '75%', height: '100%', overflow: 'hidden' }}>
                     <NavBar />
                     <img
                         src="home.png"
