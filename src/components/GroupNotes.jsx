@@ -69,6 +69,7 @@ const GroupNotes = ({ id }) => {
                     toast.success("Note has been updated");
                     setEditingNoteId(null);
                     setEditingNoteText("");
+                    setNoteToEdit(null);
                 } else {
                     toast.error(response.message || "Failed to update note");
                 }
@@ -97,6 +98,7 @@ const GroupNotes = ({ id }) => {
             toast.error(error);
         } finally {
             setLoading(false);
+            setNoteToDelete(null);
         }
     };
 
@@ -139,7 +141,7 @@ const GroupNotes = ({ id }) => {
             handleCreateNote();
         }
     };
-    console.log(note);
+    // console.log(note);
     return (
         <div
             style={{
