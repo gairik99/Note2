@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { createNote, updateNote, deleteNote } from "../../services/noteService"; // Import deleteNote
 import { useNote } from "../context/noteContext";
 import { useAuth } from "../context/authContext";
 
@@ -10,6 +11,11 @@ const GroupNotes = ({ id }) => {
     const [notes, setNotes] = useState({});
     const [groupNote, setGroupNote] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [editingNoteId, setEditingNoteId] = useState(null); // Track which note is being edited
+    const [editingNoteText, setEditingNoteText] = useState(""); // Track the updated text
+    const [showConfirmation, setShowConfirmation] = useState(false); // Track confirmation UI visibility
+    const [noteToEdit, setNoteToEdit] = useState(null); // Track the note to be edited
+    const [noteToDelete, setNoteToDelete] = useState(null); // Track the note to be deleted
 
     useEffect(() => {
         setNotes({ groupId: id });
@@ -21,74 +27,118 @@ const GroupNotes = ({ id }) => {
         let val = e.target.value;
         setNotes((prevNotes) => ({ ...prevNotes, note: val }));
     };
+
     const handleCreateNote = async () => {
         if (notes.note?.trim().length > 0) {
-            const date = new Date();
-            const day = date.getDate();
-            const month = date.toLocaleString("en-US", { month: "short" });
-            const year = date.getFullYear();
-            const formattedDate = `${day} ${month} ${year}`;
+            const date = new Date().toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+            const time = new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 
-            // Format for time
-            const timeOptions = { hour: "numeric", minute: "2-digit", hour12: true };
-            const formattedTime = new Date().toLocaleTimeString("en-US", timeOptions);
+            const newNote = { ...notes, date, time };
 
-            const newNote = {
-                ...notes,
-                date: formattedDate,
-                time: formattedTime,
-            };
             setLoading(true);
             try {
-                const response = await axios.patch(
-                    "https://note2-backend.onrender.com/api/v1/users/addNote",
-                    newNote,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${user.token}`, // Ensure authentication if required
-                        },
-                    }
-                );
-                // console.log(response);
-                if (response.data.status == "ok") {
-                    // const { noteId } = response.data;
-
-                    // Add the new note with the returned _id to state
-                    // setNote((prev) => [...prev, { ...newNote, _id: noteId }]);
-                    setNote((prevNote) => [...prevNote, response.data.data]);
-                    console.log(response.data);
+                const response = await createNote(newNote, user.token);
+                if (response.status === "ok") {
+                    setNote((prevNote) => [...prevNote, response.data]);
                     toast.success("Note has been created");
                 } else {
-                    toast.error(response.data.message || "Failed to add note");
+                    toast.error(response.message || "Failed to add note");
                 }
             } catch (error) {
-                // console.error("Error adding note:", error);
-                toast.error(
-                    error.response?.data?.message ||
-                    "Something went wrong while adding the note"
-                );
-            }
-            finally {
-                setLoading(false); // End loading effect
+                toast.error(error);
+            } finally {
+                setLoading(false);
             }
         } else {
             toast.warning("Note should have at least one character");
         }
     };
+
+    const handleEditNote = async () => {
+        if (editingNoteText.trim().length > 0) {
+            const updatedNote = { _id: editingNoteId, note: editingNoteText };
+
+            setLoading(true);
+            try {
+                const response = await updateNote(updatedNote, user.token);
+                if (response.status === "ok") {
+                    setNote((prevNotes) =>
+                        prevNotes.map((note) =>
+                            note._id.toString() === editingNoteId.toString() ? { ...note, note: editingNoteText } : note
+                        )
+                    );
+                    toast.success("Note has been updated");
+                    setEditingNoteId(null);
+                    setEditingNoteText("");
+                } else {
+                    toast.error(response.message || "Failed to update note");
+                }
+            } catch (error) {
+                toast.error(error);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            toast.warning("Note should have at least one character");
+        }
+    };
+
+    const handleDeleteNote = async (_id) => {
+        setLoading(true);
+        try {
+            const response = await deleteNote(_id, user.token);
+            console.log(response);
+            if (response.status === 200) {
+                setNote((prevNotes) => prevNotes.filter((note) => note._id !== _id));
+                toast.success("Note has been deleted");
+            } else {
+                toast.error(response.message || "Failed to delete note");
+            }
+        } catch (error) {
+            toast.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEditClick = (note) => {
+        setNoteToEdit(note); // Store the note to be edited
+        setShowConfirmation(true); // Show the confirmation UI
+    };
+
+    const handleDeleteClick = (note) => {
+        setNoteToDelete(note); // Store the note to be deleted
+        setShowConfirmation(true); // Show the confirmation UI
+    };
+
+    const handleConfirmAction = () => {
+        if (noteToEdit) {
+            setEditingNoteId(noteToEdit._id); // Set the note ID being edited
+            setEditingNoteText(noteToEdit.note); // Set the current note text for editing
+        } else if (noteToDelete) {
+            handleDeleteNote(noteToDelete._id); // Delete the note
+        }
+        setShowConfirmation(false); // Hide the confirmation UI
+    };
+
+    const handleCancelAction = () => {
+        setShowConfirmation(false); // Hide the confirmation UI
+        setNoteToEdit(null); // Clear the note to be edited
+        setNoteToDelete(null); // Clear the note to be deleted
+    };
+
+    const handleCancelEditMode = () => {
+        setEditingNoteId(null); // Exit edit mode
+        setEditingNoteText(""); // Clear the edit text
+    };
+
     const handleKeyPress = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault(); // Prevent newline in textarea
             handleCreateNote();
         }
     };
-    // let newNotes = note?.filter(({ key }) => id == key)
-    // setGroupNote(newNotes);
-    // console.log('..............')
-    // console.log('id', id);
-    // console.log('notes', notes);
-    // console.log('note', note);
-    // console.log('groupNote', groupNote);
-
+    console.log(note);
     return (
         <div
             style={{
@@ -98,6 +148,68 @@ const GroupNotes = ({ id }) => {
                 position: "relative",
             }}
         >
+            {/* Custom Confirmation UI */}
+            {showConfirmation && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0, 0, 0, 0.5)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 1000,
+                    }}
+                >
+                    <div
+                        style={{
+                            background: "white",
+                            padding: "2rem",
+                            borderRadius: "10px",
+                            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
+                            textAlign: "center",
+                        }}
+                    >
+                        <p style={{ fontSize: "1.2rem", marginBottom: "1rem" }}>
+                            {noteToEdit
+                                ? "Are you sure you want to edit this note?"
+                                : "Are you sure you want to delete this note?"}
+                        </p>
+                        <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+                            <button
+                                style={{
+                                    background: "green",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "5px",
+                                    padding: "0.5rem 1rem",
+                                    cursor: "pointer",
+                                }}
+                                onClick={handleConfirmAction}
+                            >
+                                Yes
+                            </button>
+                            <button
+                                style={{
+                                    background: "red",
+                                    color: "white",
+                                    border: "none",
+                                    borderRadius: "5px",
+                                    padding: "0.5rem 1rem",
+                                    cursor: "pointer",
+                                }}
+                                onClick={handleCancelAction}
+                            >
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div
                 style={{
                     width: "100%",
@@ -117,41 +229,141 @@ const GroupNotes = ({ id }) => {
                                 boxShadow: "0 0 10px rgba(17, 233, 100, 0.2)",
                                 background: "#fafafa",
                                 color: "#262626",
-                                position: "relative", // Allows positioning of child elements
+                                position: "relative",
                                 display: "flex",
                                 flexDirection: "column",
                                 justifyContent: "space-between",
-                                wordBreak: "break-word", // Handle long text gracefully
-                                maxWidth: "100%", // Prevent overflow
-                                minHeight: "10vh", // Ensure adequate height
+                                wordBreak: "break-word",
+                                maxWidth: "100%",
+                                minHeight: "10vh",
                             }}
                         >
-                            <p
-                                style={{
-                                    fontSize: "1.2rem",
-                                    marginBottom: "0.5rem",
-                                    wordBreak: "break-word",
-                                    whiteSpace: "normal",
-                                    padding: "1rem",
-                                }}
-                            >
-                                {note}
-                            </p>
                             <div
                                 style={{
-                                    position: "absolute",
-                                    bottom: "0.5rem",
-                                    right: "0.5rem",
-                                    fontSize: "0.8rem",
-                                    color: "#555",
                                     display: "flex",
+                                    justifyContent: "space-between",
                                     alignItems: "center",
-                                    gap: "0.3rem",
                                 }}
                             >
-                                <span>{date}</span>
-                                <span>•</span>
-                                <span>{time}</span>
+                                {editingNoteId === _id ? (
+                                    <textarea
+                                        style={{
+                                            width: "100%",
+                                            height: "10vh",
+                                            padding: "0.5rem",
+                                            fontSize: "1rem",
+                                            borderRadius: "5px",
+                                            border: "1px solid #ccc",
+                                            marginBottom: "0.5rem",
+                                        }}
+                                        value={editingNoteText}
+                                        onChange={(e) => setEditingNoteText(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter" && !e.shiftKey) {
+                                                e.preventDefault();
+                                                handleEditNote();
+                                            }
+                                        }}
+                                    />
+                                ) : (
+                                    <p
+                                        style={{
+                                            fontSize: "1.2rem",
+                                            marginBottom: "0.5rem",
+                                            wordBreak: "break-word",
+                                            whiteSpace: "normal",
+                                            padding: "1rem",
+                                        }}
+                                    >
+                                        {note}
+                                    </p>
+                                )}
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "0.5rem",
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            fontSize: "0.8rem",
+                                            color: "#555",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: "0.3rem",
+                                        }}
+                                    >
+                                        <span>{date}</span>
+                                        <span>•</span>
+                                        <span>{time}</span>
+                                    </div>
+                                    {editingNoteId === _id ? (
+                                        <>
+                                            <button
+                                                style={{
+                                                    background: "blue",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "5px",
+                                                    padding: "0.3rem 0.8rem",
+                                                    fontSize: "0.9rem",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={handleEditNote}
+                                            >
+                                                &#10095;
+                                            </button>
+                                            <button
+                                                style={{
+                                                    background: "red",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "5px",
+                                                    padding: "0.3rem 0.8rem",
+                                                    fontSize: "0.9rem",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={handleCancelEditMode}
+                                            >
+                                                &#10006;
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <button
+                                                style={{
+                                                    background: "green",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "5px",
+                                                    padding: "0.3rem 0.8rem",
+                                                    fontSize: "0.9rem",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={() => handleEditClick({ _id, note, date, time })}
+                                                disabled={editingNoteId !== null}
+                                            >
+                                                &#x270E;
+                                            </button>
+                                            <button
+                                                style={{
+                                                    background: "red",
+                                                    color: "white",
+                                                    border: "none",
+                                                    borderRadius: "5px",
+                                                    padding: "0.3rem 0.8rem",
+                                                    fontSize: "0.9rem",
+                                                    cursor: "pointer",
+                                                }}
+                                                onClick={() => handleDeleteClick({ _id, note, date, time })}
+                                                disabled={loading}
+                                            >
+                                                &#128465;
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))
@@ -177,7 +389,7 @@ const GroupNotes = ({ id }) => {
                     borderRadius: "5px",
                     padding: "0.5rem 0.5rem",
                     fontSize: "1rem",
-                    boxSizing: "border-box", // Ensure proper padding calculations
+                    boxSizing: "border-box",
                 }}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyPress}
@@ -227,4 +439,5 @@ const GroupNotes = ({ id }) => {
         </div>
     );
 };
+
 export default GroupNotes;

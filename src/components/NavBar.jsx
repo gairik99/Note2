@@ -81,10 +81,50 @@ const NavBar = ({ id }) => {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 {!user?.token ? (
                     <>
-                        <button className="nav-btn" onClick={() => setModal(prev => ({ ...prev, signinModal: true }))}>
+                        <button
+                            style={{
+                                padding: '0.5rem 1.5rem',
+                                background: '#ECFEFF',
+                                color: '#1E293B',
+                                fontWeight: 'bold',
+                                border: '2px solid #1E40AF',
+                                borderRadius: '0.5rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                            }}
+                            onMouseOver={(e) => {
+                                e.target.style.background = '#1E40AF';
+                                e.target.style.color = 'white';
+                            }}
+                            onMouseOut={(e) => {
+                                e.target.style.background = '#ECFEFF';
+                                e.target.style.color = '#1E293B';
+                            }}
+                            onClick={() => setModal(prev => ({ ...prev, signinModal: true }))}
+                        >
                             Sign In
                         </button>
-                        <button className="nav-btn" onClick={() => setModal(prev => ({ ...prev, signupModal: true }))}>
+                        <button
+                            style={{
+                                padding: '0.5rem 1.5rem',
+                                background: '#ECFEFF',
+                                color: '#1E293B',
+                                fontWeight: 'bold',
+                                border: '2px solid #1E40AF',
+                                borderRadius: '0.5rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                            }}
+                            onMouseOver={(e) => {
+                                e.target.style.background = '#1E40AF';
+                                e.target.style.color = 'white';
+                            }}
+                            onMouseOut={(e) => {
+                                e.target.style.background = '#ECFEFF';
+                                e.target.style.color = '#1E293B';
+                            }}
+                            onClick={() => setModal(prev => ({ ...prev, signupModal: true }))}
+                        >
                             Sign Up
                         </button>
                     </>
@@ -93,28 +133,32 @@ const NavBar = ({ id }) => {
                         <div style={{ color: 'white', fontSize: '1.2rem', fontWeight: '500' }}>
                             Welcome, {user?.userName || 'User'}
                         </div>
-                        <button className="nav-btn" onClick={() => setModal(prev => ({ ...prev, signoutModal: true }))}>
+                        <button
+                            style={{
+                                padding: '0.5rem 1.5rem',
+                                background: '#ECFEFF',
+                                color: '#1E293B',
+                                fontWeight: 'bold',
+                                border: '2px solid #1E40AF',
+                                borderRadius: '0.5rem',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                            }}
+                            onMouseOver={(e) => {
+                                e.target.style.background = '#1E40AF';
+                                e.target.style.color = 'white';
+                            }}
+                            onMouseOut={(e) => {
+                                e.target.style.background = '#ECFEFF';
+                                e.target.style.color = '#1E293B';
+                            }}
+                            onClick={() => setModal(prev => ({ ...prev, signoutModal: true }))}
+                        >
                             Sign Out
                         </button>
                     </>
                 )}
             </div>
-            <style jsx>{`
-                .nav-btn {
-                    padding: 0.5rem 1.5rem;
-                    background: #ECFEFF;
-                    color: #1E293B;
-                    font-weight: bold;
-                    border: 2px solid #1E40AF;
-                    border-radius: 0.5rem;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                }
-                .nav-btn:hover {
-                    background: #1E40AF;
-                    color: white;
-                }
-            `}</style>
         </div>
     );
 };
