@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { createNote, updateNote, deleteNote } from "../../services/noteService"; // Import deleteNote
 import { useNote } from "../context/noteContext";
@@ -125,13 +124,15 @@ const GroupNotes = ({ id }) => {
         setShowConfirmation(false); // Hide the confirmation UI
         setNoteToEdit(null); // Clear the note to be edited
         setNoteToDelete(null); // Clear the note to be deleted
+        setEditingNoteId(null); // Clear the editing note ID
+        setEditingNoteText("");
     };
 
     const handleCancelEditMode = () => {
         setEditingNoteId(null); // Exit edit mode
         setEditingNoteText(""); // Clear the edit text
-    };
-
+        setNoteToEdit(null);
+    }
     const handleKeyPress = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault(); // Prevent newline in textarea
