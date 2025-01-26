@@ -45,6 +45,7 @@ const Sidebar = ({ id }) => {
                 width: "25%",
                 height: "100%",
                 position: "relative",
+                background: 'rgb(239, 240, 231)'
             }}
         >
             <h1
@@ -60,7 +61,7 @@ const Sidebar = ({ id }) => {
                 }}
                 onClick={handleHomePage}
             >
-                Pocket Note
+                Note
             </h1 >
             <ul style={{
                 maxHeight: "calc(100vh - 6rem)", // Adjust height to leave space for header
