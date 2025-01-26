@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import { useModal } from "../context/modalContext";
+import { useAuth } from "../context/authContext";
 import CreateGroupModal from "../components/CreateGroupModal";
 import NavBar from "../components/NavBar";
 import CreateSignUpModal from "../components/CreateSignUpModal";
@@ -10,6 +11,7 @@ import "./Home.css";
 
 const Home = () => {
     const { modal } = useModal();
+    const { user } = useAuth();
 
     return (
         <motion.div
@@ -24,14 +26,56 @@ const Home = () => {
                 animate={{ x: 0 }}
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
             >
-                <Sidebar />
+                {user?.token && <Sidebar />}
                 <motion.div
                     className="content"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1 }}
+                    style={{ width: user?.token ? "75%" : "100%" }}
                 >
                     <NavBar />
+
+                    {/* Static Content About the App */}
+                    {!user?.token && (
+                        <motion.div
+                            className="static-content"
+                            initial={{ opacity: 0, y: 50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                            style={{
+                                textAlign: "center",
+                                padding: "4rem",
+                                background: "rgba(255, 255, 255, 0.1)",
+                                borderRadius: "10px",
+                                backdropFilter: "blur(10px)",
+                                border: "1px solid rgba(255, 255, 255, 0.2)",
+                                maxWidth: "800px",
+                                margin: "5vh auto",
+                            }}
+                        >
+                            <h1 style={{ color: "rgba(29, 24, 24, 0.81)", fontSize: "2.5rem", marginBottom: "1rem" }}>
+                                Welcome to Note App
+                            </h1>
+                            <p style={{ color: "rgba(29, 24, 24, 0.69)", fontSize: "1.2rem", lineHeight: "1.6" }}>
+                                Note App is your ultimate solution for organizing and managing your notes efficiently.
+                                Whether you're jotting down quick ideas, creating to-do lists, or collaborating with
+                                others, Note App has got you covered. Sign up or sign in to get started and unlock the
+                                full potential of our app!
+                            </p>
+                            <h2 style={{ color: "rgba(29, 24, 24, 0.78)", fontSize: "2rem", marginTop: "1.5rem", marginBottom: "1rem" }}>
+                                Key Features:
+                            </h2>
+                            <ul style={{ color: "rgba(29, 24, 24, 0.79)", fontSize: "1.1rem", textAlign: "center", listStyleType: "none", padding: 0 }}>
+                                <li>📝 Create and manage notes effortlessly.</li>
+                                <li>👥 Collaborate with groups and share notes.</li>
+                                <li>🔒 Secure and private with user authentication.</li>
+                                <li>📅 Stay organized with reminders and due dates.</li>
+                                <li>🌐 Access your notes from anywhere, anytime.</li>
+                            </ul>
+                        </motion.div>
+                    )}
+
                     {/* Word "Note" moving all around the page */}
                     <motion.div
                         className="moving-note"
@@ -53,10 +97,12 @@ const Home = () => {
                         style={{ willChange: "transform" }}
                     >
                         <img src="icon.jpg" alt="Note" style={{ height: '30vh', width: "20vw", borderRadius: "10%" }} />
+                        <p>Note</p>
                     </motion.div>
                 </motion.div>
             </motion.div>
 
+            {/* Modals */}
             {modal.groupModal && (
                 <motion.div
                     className="modal-animation"

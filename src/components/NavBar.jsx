@@ -44,6 +44,11 @@ const NavBar = ({ id }) => {
             boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)', // More prominent shadow
             borderBottom: '3px solid #1E40AF',
         }}>
+            {!user?.token && (
+                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: '700', marginRight: '1rem' }}>
+                    Note App
+                </div>
+            )}
             <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
                 {newGroup && (
                     <>

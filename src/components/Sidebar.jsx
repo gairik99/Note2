@@ -81,7 +81,7 @@ const Sidebar = ({ id }) => {
                                 display: "flex",
                                 // justifyContent: 'center',
                                 alignItems: 'center',
-                                background: _id == selectedId ? "#f0f8ff" : "transparent",
+                                background: _id == selectedId ? "rgba(220, 209, 209, 0.42)" : "transparent",
                                 borderRadius: _id == selectedId ? "0 5% 5% 0" : "",
                                 cursor: "pointer",
                                 overflow: "hidden",
