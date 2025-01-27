@@ -45,7 +45,26 @@ const NavBar = ({ id }) => {
             borderBottom: '3px solid #1E40AF',
         }}>
             {!user?.token && (
-                <div style={{ color: 'white', fontSize: '1.5rem', fontWeight: '700', marginRight: '1rem' }}>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: 'white',
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                    marginRight: '1rem'
+                }}>
+                    <img
+                        src="/icon.jpg"
+                        alt="note img"
+                        style={{
+                            width: '40px', // Adjust the width as needed
+                            height: '40px', // Adjust the height as needed
+                            borderRadius: '50%', // Makes the image circular
+                            border: '2px solid white', // Adds a border around the image
+                            boxShadow: '0 0 10px rgba(255, 255, 255, 0.6)', // Adds a subtle glow effect
+                        }}
+                    />
                     Note App
                 </div>
             )}
@@ -54,12 +73,13 @@ const NavBar = ({ id }) => {
                     <>
                         <div style={{
                             background: newGroup.color || '#4C51BF',
-                            height: '6.8vh',
-                            width: '12%',
+                            height: '6.9vh',
+                            width: '10%',
                             border: "3px solid white",
                             borderRadius: '50%',
                             color: 'white',
-                            fontSize: '1.4rem',
+                            fontSize: '1.5rem',
+                            fontWeight: "bolder",
                             justifyContent: 'center',
                             alignItems: 'center',
                             display: 'flex',
@@ -136,7 +156,7 @@ const NavBar = ({ id }) => {
                 ) : (
                     <>
                         <div style={{ color: 'white', fontSize: '1.2rem', fontWeight: '500' }}>
-                            Welcome, {user?.userName || 'User'}
+                            {user?.userName || 'User'}
                         </div>
                         <button
                             style={{

@@ -76,6 +76,43 @@ const Home = () => {
                         </motion.div>
                     )}
 
+                    {/* Display username if it exists */}
+                    {user?.userName && (
+                        <motion.div
+                            className="user-greeting"
+                            initial={{ opacity: 0, y: -50 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                            style={{
+                                textAlign: "center",
+                                padding: "1rem",
+                                background: "rgba(255, 255, 255, 0.1)",
+                                borderRadius: "10px",
+                                backdropFilter: "blur(10px)",
+                                border: "1px solid rgba(255, 255, 255, 0.2)",
+                                maxWidth: "20vw",
+                                margin: "16vh auto",
+                                color: "rgba(29, 24, 24, 0.81)",
+                                fontSize: "1.5rem",
+                            }}
+                        >
+                            Welcome back, {user.userName}!
+                            <img
+                                src="./icon.jpg"
+                                alt="note image"
+                                style={{
+                                    width: "100px", // Set a fixed width
+                                    height: "100px", // Set a fixed height
+                                    borderRadius: "50%", // Make it circular
+                                    border: "3px solid rgba(255, 255, 255, 0.5)", // Add a border
+                                    marginTop: "1rem", // Add some space above the image
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add a subtle shadow
+                                    objectFit: "cover", // Ensure the image covers the area without distortion
+                                }}
+                            />
+                        </motion.div>
+                    )}
+
                     {/* Word "Note" moving all around the page */}
                     <motion.div
                         className="moving-note"
@@ -96,8 +133,7 @@ const Home = () => {
                         }}
                         style={{ willChange: "transform" }}
                     >
-                        <img src="icon.jpg" alt="Note" style={{ height: '30vh', width: "20vw", borderRadius: "10%" }} />
-                        <p>Note</p>
+                        Note
                     </motion.div>
                 </motion.div>
             </motion.div>

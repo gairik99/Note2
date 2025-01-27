@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom"
+import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar"
 import CreateGroupModal from "../components/CreateGroupModal"
 import { useModal } from "../context/modalContext"
@@ -21,10 +22,27 @@ const SingleNote = () => {
                     <GroupNotes id={id} />
                 </div>
             </div>
-            {modal.groupModal && <CreateGroupModal />}
-            {modal.signinModal && <CreateSignInModal />}
-            {modal.signupModal && <CreateSignUpModal />}
-            {modal.signoutModal && <CreateSignoutModal />}
+            {modal.groupModal && (
+                <motion.div
+                    className="modal-animation"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                    <CreateGroupModal />
+                </motion.div>
+            )}
+
+            {modal.signoutModal && (
+                <motion.div
+                    className="modal-animation"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                >
+                    <CreateSignoutModal />
+                </motion.div>
+            )}
         </div>
     )
 }
