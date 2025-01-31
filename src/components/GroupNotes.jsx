@@ -216,7 +216,7 @@ const GroupNotes = ({ id }) => {
             <div
                 style={{
                     width: "100%",
-                    height: "72.6vh",
+                    height: "72.4vh",
                     overflowY: "auto",
                     padding: "0.5rem",
                 }}

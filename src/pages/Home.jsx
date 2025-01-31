@@ -12,7 +12,10 @@ import "./Home.css";
 const Home = () => {
     const { modal } = useModal();
     const { user } = useAuth();
-
+    // console.log("Environment Variables in App:", {
+    //     cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
+    //     uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    // });
     return (
         <motion.div
             className="home-container"

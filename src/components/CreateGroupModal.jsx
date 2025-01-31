@@ -11,7 +11,7 @@ const CreateGroupModal = () => {
     const [selectedColor, setSelectedColor] = useState(null);
     const [loading, setLoading] = useState(false);
     const { setModal } = useModal();
-    const { setGroup, group } = useGroup();
+    const { setGroup } = useGroup();
     const { user } = useAuth();
     const handleClick = (e) => {
         setModal((prevModal) => ({

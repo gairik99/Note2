@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useGroup } from "../context/groupContext";
 import { useModal } from "../context/modalContext";
 import { useAuth } from "../context/authContext";
+import SidebarHeader from "./SideBarHeader";
 
 
 const Sidebar = ({ id }) => {
@@ -36,9 +37,9 @@ const Sidebar = ({ id }) => {
         }
     };
 
-    const handleHomePage = () => {
-        navigate("/");
-    };
+    // const handleHomePage = () => {
+    //     navigate("/");
+    // };
 
     return (
         <div
@@ -50,42 +51,12 @@ const Sidebar = ({ id }) => {
             }}
         >
             {/* Header with image and h1 side by side */}
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center", // Vertically center items
-                    justifyContent: "center", // Horizontally center items
-                    padding: "1rem",
-                    borderBottom: "1px solid rgba(0, 0, 0, 0.1)", // Optional: Add a border
-                }}
-            >
-                <img
-                    src="/icon.jpg"
-                    alt="note"
-                    style={{
-                        width: "50px", // Adjust the size of the image
-                        height: "50px", // Adjust the size of the image
-                        borderRadius: "50%", // Optional: Make the image circular
-                        marginRight: "1rem", // Add space between the image and the heading
-                    }}
-                />
-                <h1
-                    style={{
-                        color: "#18181b",
-                        margin: 0,
-                        fontSize: "2rem",
-                        cursor: "pointer", // Make it clickable
-                    }}
-                    onClick={handleHomePage}
-                >
-                    Note
-                </h1>
-            </div>
+            <SidebarHeader />
 
             {/* Group List */}
             <ul
                 style={{
-                    maxHeight: "calc(100vh - 6rem)", // Adjust height to leave space for header
+                    maxHeight: "calc(100vh - 16rem)", // Adjust height to leave space for header
                     overflowY: "auto", // Enables vertical scrolling
                     padding: "0",
                     margin: "0",

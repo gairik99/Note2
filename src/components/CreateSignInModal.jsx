@@ -81,6 +81,7 @@ const CreateSignInModal = () => {
                 setUser({
                     userName: response.data.user.name,
                     token: response.data.token,
+                    imageurl: response.data.user.imageurl
                 });
                 setGroup(response.data.user.group);
                 setNote(response.data.user.notes);
