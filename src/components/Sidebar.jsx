@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useGroup } from "../context/groupContext";
 import { useModal } from "../context/modalContext";
 import { useAuth } from "../context/authContext";
-import SidebarHeader from "./SideBarHeader";
+import SidebarHeader from "./SidebarHeader";
 
 
 const Sidebar = ({ id }) => {
