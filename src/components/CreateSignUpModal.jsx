@@ -67,6 +67,7 @@ const CreateSignUpModal = () => {
                 setModal((prevModal) => ({
                     ...prevModal,
                     signupModal: false,
+                    signinModal: true
                 }));
                 toast.success("User has been created");
             } else {
