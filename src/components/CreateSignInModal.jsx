@@ -114,7 +114,8 @@ const CreateSignInModal = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                zIndex: 5, // Ensure it's higher than other elements
+                zIndex: 5,
+                padding: "1rem", // Ensures proper spacing on smaller screens
             }}
             onClick={handleClick}
         >
@@ -122,76 +123,48 @@ const CreateSignInModal = () => {
                 style={{
                     position: "absolute",
                     top: "10%",
-                    left: "64%",
-                    width: "90%", // Use relative width
-                    maxWidth: "500px", // Restrict maximum width
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "90%", // Relative width
+                    maxWidth: "450px", // Adjust max width for better responsiveness
                     background: "#ffffff",
                     borderRadius: "8px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    padding: "2rem", // Increased padding for more space
+                    padding: "2rem",
                     boxSizing: "border-box",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Added box shadow for depth
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                 }}
-                onClick={(e) => e.stopPropagation()} // Prevent click propagation to the backdrop
+                onClick={(e) => e.stopPropagation()}
             >
-                <h2 style={{ marginBottom: "1rem", color: "#1e293b" }}>Sign In</h2>
-                <label style={{ width: "100%", marginBottom: "1rem" }}>
-                    <span style={{ display: "block", marginBottom: "0.5rem" }}>
-                        Email
-                    </span>
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        style={{
-                            border: "1px solid grey",
-                            padding: "0.75rem",
-                            borderRadius: "1rem",
-                            width: "100%",
-                            boxSizing: "border-box",
-                        }}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <label style={{ width: "100%", marginBottom: "1rem" }}>
-                    <span style={{ display: "block", marginBottom: "0.5rem" }}>
-                        Password
-                    </span>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Enter your password"
-                        style={{
-                            border: "1px solid grey",
-                            padding: "0.75rem",
-                            borderRadius: "1rem",
-                            width: "100%",
-                            boxSizing: "border-box",
-                        }}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <label style={{ width: "100%", marginBottom: "1rem" }}>
-                    <span style={{ display: "block", marginBottom: "0.5rem" }}>
-                        Confirm Password
-                    </span>
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        placeholder="Confirm your password"
-                        style={{
-                            border: "1px solid grey",
-                            padding: "0.75rem",
-                            borderRadius: "1rem",
-                            width: "100%",
-                            boxSizing: "border-box",
-                        }}
-                        onChange={handleInputChange}
-                    />
-                </label>
+                <h2 style={{ marginBottom: "1rem", color: "#1e293b", textAlign: "center" }}>
+                    Sign In
+                </h2>
+
+                {["email", "password", "confirmPassword"].map((field, index) => (
+                    <label key={index} style={{ width: "100%", marginBottom: "1rem" }}>
+                        <span style={{ display: "block", marginBottom: "0.5rem" }}>
+                            {field === "email" ? "Email" : field === "password" ? "Password" : "Confirm Password"}
+                        </span>
+                        <input
+                            type={field === "email" ? "email" : "password"} // Explicitly setting password type
+                            name={field}
+                            placeholder={`Enter your ${field === "confirmPassword" ? "password again" : field}`}
+                            style={{
+                                border: "1px solid grey",
+                                padding: "0.75rem",
+                                borderRadius: "1rem",
+                                width: "100%",
+                                boxSizing: "border-box",
+                                fontSize: "1rem",
+                            }}
+                            onChange={handleInputChange}
+                        />
+                    </label>
+                ))}
+
                 <button
                     style={{
                         marginTop: "1rem",
@@ -205,8 +178,8 @@ const CreateSignInModal = () => {
                         cursor: "pointer",
                         transition: "background 0.3s",
                     }}
-                    onMouseOver={(e) => (e.target.style.background = "#0044cc")} // Hover effect
-                    onMouseOut={(e) => (e.target.style.background = "blue")} // Revert hover effect
+                    onMouseOver={(e) => (e.target.style.background = "#0044cc")}
+                    onMouseOut={(e) => (e.target.style.background = "blue")}
                     disabled={loading}
                     onClick={handleButtonClick}
                 >

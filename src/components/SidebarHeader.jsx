@@ -1,15 +1,19 @@
 import { useState } from "react";
+import { IoLogOutSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/authContext";
+import { useModal } from "../context/modalContext";
 
-const SidebarHeader = () => {
+const SidebarHeader = ({ hide }) => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { setModal } = useModal();
     const [isHovered, setIsHovered] = useState(false);
 
     const handleHomeClick = () => {
         navigate("/");
     };
+
 
     return (
         <div
@@ -17,7 +21,7 @@ const SidebarHeader = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                padding: "1.5rem 1rem",
+                padding: hide ? "1rem 0.5rem" : "1.5rem 1rem",
                 borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
                 background: "#f8fafc",
             }}
@@ -26,7 +30,7 @@ const SidebarHeader = () => {
             {user?.token && user?.imageurl && (
                 <div
                     style={{
-                        marginBottom: "1.5rem",
+                        marginBottom: hide ? "1rem" : "1.5rem",
                         cursor: "pointer",
                         position: "relative",
                         transition: "transform 0.2s ease, box-shadow 0.2s ease",
@@ -43,8 +47,8 @@ const SidebarHeader = () => {
                             position: "absolute",
                             bottom: "5px",
                             right: "5px",
-                            width: "16px",
-                            height: "16px",
+                            width: hide ? "12px" : "16px",
+                            height: hide ? "12px" : "16px",
                             borderRadius: "50%",
                             background: "#4ade80",
                             border: "2px solid white",
@@ -55,8 +59,8 @@ const SidebarHeader = () => {
                         src={user.imageurl || ""}
                         alt="User Profile"
                         style={{
-                            width: "8rem",
-                            height: "8rem",
+                            width: hide ? "6rem" : "8rem",
+                            height: hide ? "6rem" : "8rem",
                             borderRadius: "50%",
                             objectFit: "cover",
                             border: "3px solid white",
@@ -66,13 +70,15 @@ const SidebarHeader = () => {
                 </div>
             )}
 
-            {/* Note Logo and Heading */}
+            {/* Note Logo, Heading, and Logout Icon */}
             <div
                 style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
                     cursor: "pointer",
-                    padding: "0.5rem 1rem",
+                    padding: hide ? "0.25rem 0.5rem" : "0.5rem 1rem",
                     borderRadius: "12px",
                     transition: "background 0.3s ease, transform 0.2s ease",
                     userSelect: "none",
@@ -83,40 +89,54 @@ const SidebarHeader = () => {
                 }
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
-                <img
-                    src="/icon.jpg"
-                    alt="note"
+                <div style={{ display: "flex", alignItems: "center" }}>
+                    <img
+                        src="/icon.jpg"
+                        alt="note"
+                        style={{
+                            width: hide ? "40px" : "52px",
+                            height: hide ? "40px" : "52px",
+                            borderRadius: "14px",
+                            marginRight: hide ? "0.5rem" : "0.75rem",
+                            boxShadow: "0 3px 6px rgba(0, 0, 0, 0.15)",
+                            transition: "transform 0.2s ease",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                    />
+                    <h1
+                        style={{
+                            color: "#1e293b",
+                            margin: 0,
+                            fontSize: hide ? "1.5rem" : "2rem",
+                            fontWeight: 800,
+                            letterSpacing: "-0.04em",
+                            fontFamily: "'Inter', sans-serif",
+                            background: "linear-gradient(135deg, #3b82f6, #6366f1, #9333ea)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            transition: "text-shadow 0.2s ease",
+                            lineHeight: "1.2",
+                        }}
+                        onMouseEnter={(e) =>
+                            (e.currentTarget.style.textShadow = "0 2px 6px rgba(99, 102, 241, 0.5)")
+                        }
+                        onMouseLeave={(e) => (e.currentTarget.style.textShadow = "none")}
+                    >
+                        {user.userName}
+                    </h1>
+                </div>
+                {hide && <IoLogOutSharp
                     style={{
-                        width: "52px",
-                        height: "52px",
-                        borderRadius: "14px",
-                        marginRight: "0.75rem",
-                        boxShadow: "0 3px 6px rgba(0, 0, 0, 0.15)",
+                        fontSize: hide ? "1.5rem" : "2rem",
+                        color: "#3b82f6",
+                        cursor: "pointer",
                         transition: "transform 0.2s ease",
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
                     onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                />
-                <h1
-                    style={{
-                        color: "#1e293b",
-                        margin: 0,
-                        fontSize: "2rem",
-                        fontWeight: 800,
-                        letterSpacing: "-0.04em",
-                        fontFamily: "'Inter', sans-serif",
-                        background: "linear-gradient(135deg, #3b82f6, #6366f1, #9333ea)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        transition: "text-shadow 0.2s ease",
-                    }}
-                    onMouseEnter={(e) =>
-                        (e.currentTarget.style.textShadow = "0 2px 6px rgba(99, 102, 241, 0.5)")
-                    }
-                    onMouseLeave={(e) => (e.currentTarget.style.textShadow = "none")}
-                >
-                    Pocket   Note
-                </h1>
+                    onClick={() => setModal(prev => ({ ...prev, signoutModal: true }))}
+                />}
             </div>
         </div>
     );

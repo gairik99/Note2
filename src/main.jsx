@@ -8,6 +8,7 @@ import { ModalProvider } from './context/modalContext.jsx'
 import { AuthProvider } from './context/authContext.jsx'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { StyleProvider } from './context/styleContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
@@ -15,7 +16,9 @@ createRoot(document.getElementById('root')).render(
       <GroupProvider>
         <NoteProvider>
           <ModalProvider>
-            <App />
+            <StyleProvider>
+              <App />
+            </StyleProvider>
             <ToastContainer />
           </ModalProvider>
         </NoteProvider>

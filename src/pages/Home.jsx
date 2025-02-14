@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import { useModal } from "../context/modalContext";
@@ -7,15 +9,27 @@ import NavBar from "../components/NavBar";
 import CreateSignUpModal from "../components/CreateSignUpModal";
 import CreateSignInModal from "../components/CreateSignInModal";
 import CreateSignoutModal from "../components/CreateSignoutModal";
-import "./Home.css";
+import "../style/Home.css";
 
 const Home = () => {
+    const [isHidden, setIsHidden] = useState(window.innerWidth <= 768);
     const { modal } = useModal();
     const { user } = useAuth();
     // console.log("Environment Variables in App:", {
     //     cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
     //     uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
     // });
+    // console.log("home", isHidden)
+    useEffect(() => {
+        const handleResize = () => {
+            setIsHidden(window.innerWidth <= 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+
     return (
         <motion.div
             className="home-container"
@@ -23,26 +37,27 @@ const Home = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
         >
+
             <motion.div
                 className="main-content"
                 initial={{ x: -300 }}
                 animate={{ x: 0 }}
                 transition={{ type: "spring", stiffness: 120, damping: 20 }}
             >
-                {user?.token && <Sidebar />}
+                {user?.token && <Sidebar hidden={isHidden} />}
                 <motion.div
-                    className="content"
+                    className={`content ${isHidden && user.token ? "hide" : ""}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1 }}
-                    style={{ width: user?.token ? "75%" : "100%" }}
+                    style={{ width: user?.token ? "75%" : "100%", }}
                 >
-                    <NavBar />
+                    <NavBar hide={isHidden} />
 
                     {/* Static Content About the App */}
                     {!user?.token && (
                         <motion.div
-                            className="static-content"
+                            className="static-content "
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.5 }}
@@ -82,7 +97,7 @@ const Home = () => {
                     {/* Display username if it exists */}
                     {user?.userName && (
                         <motion.div
-                            className="user-greeting"
+                            className="user-greeting hide"
                             initial={{ opacity: 0, y: -50 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 1, delay: 0.5 }}
@@ -117,7 +132,7 @@ const Home = () => {
                     )}
 
                     {/* Word "Note" moving all around the page */}
-                    <motion.div
+                    {/* <motion.div
                         className="moving-note"
                         initial={{ x: 0, y: 0, rotate: 0, scale: 1 }}
                         animate={{
@@ -137,7 +152,7 @@ const Home = () => {
                         style={{ willChange: "transform" }}
                     >
                         Note
-                    </motion.div>
+                    </motion.div> */}
                 </motion.div>
             </motion.div>
 

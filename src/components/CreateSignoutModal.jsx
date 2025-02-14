@@ -1,9 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useModal } from "../context/modalContext";
 import { useAuth } from "../context/authContext";
 import { useGroup } from "../context/groupContext";
 import { useNote } from "../context/noteContext";
-import { useNavigate } from "react-router-dom";
+import { IoLogOutSharp } from "react-icons/io5";
 
 const CreateSignoutModal = () => {
     const { setModal } = useModal();
@@ -40,50 +41,46 @@ const CreateSignoutModal = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                zIndex: 5, // Ensure it's higher than other elements
+                zIndex: 5, // Ensure it's above other elements
+                padding: "1rem", // Adds space for smaller screens
             }}
             onClick={handleClick}
         >
             <div
                 style={{
                     position: "absolute",
-                    top: "10%",
-                    left: "72%",
-                    width: "25%", // Use relative width
+                    top: "20%", // Adjusted to center better
+                    left: "50%",
+                    transform: "translateX(-50%)", // Ensures proper centering
+                    width: "25%", // Default width
+                    maxWidth: "400px", // Restrict max width
                     background: "#ffffff",
                     borderRadius: "8px",
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    padding: "2rem", // Increased padding for more space
+                    padding: "2rem",
                     boxSizing: "border-box",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Added box shadow for depth
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                 }}
-                onClick={(e) => e.stopPropagation()} // Prevent click propagation to the backdrop
+                onClick={(e) => e.stopPropagation()}
             >
-                <p style={{ fontSize: '1.1rem', color: '#555' }}>
-                    Are you sure you want to sign out, <strong style={{ color: '#0047FF' }}>{user?.userName}</strong>?
+                <p style={{ fontSize: "1.1rem", color: "#555", textAlign: "center" }}>
+                    Are you sure you want to sign out, <strong style={{ color: "#0047FF" }}>{user?.userName}</strong>?
                 </p>
-                <button
+
+                <IoLogOutSharp
                     style={{
-                        marginTop: "1rem",
-                        height: "3rem",
-                        width: "40%",
-                        fontSize: "1rem",
-                        background: "blue",
-                        color: "white",
-                        borderRadius: "1rem",
-                        border: "none",
+                        fontSize: "10vw",
+                        color: "#3b82f6",
                         cursor: "pointer",
-                        transition: "background 0.3s",
+                        transition: "transform 0.2s ease",
                     }}
-                    onMouseOver={(e) => (e.target.style.background = "#0044cc")} // Hover effect
-                    onMouseOut={(e) => (e.target.style.background = "blue")} // Revert hover effect
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                     onClick={handleButtonClick}
-                >
-                    Sign Out
-                </button>
+                />
             </div>
         </div>
     );

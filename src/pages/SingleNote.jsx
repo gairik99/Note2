@@ -5,21 +5,36 @@ import CreateGroupModal from "../components/CreateGroupModal"
 import { useModal } from "../context/modalContext"
 import GroupNotes from "../components/GroupNotes"
 import NavBar from "../components/NavBar"
-import CreateSignInModal from "../components/CreateSignInModal"
-import CreateSignUpModal from "../components/CreateSignUpModal"
 import CreateSignoutModal from "../components/CreateSignoutModal"
+import { useState } from "react";
+import { useEffect } from "react";
+import { useStyle } from "../context/styleContext";
 
 const SingleNote = () => {
+    const [isHidden, setIsHidden] = useState(window.innerWidth <= 768);
+    const { style } = useStyle();
     const { modal } = useModal();
     const { id } = useParams();
+    // console.log('singleNote', style)
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsHidden(window.innerWidth <= 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+
     // console.log(id);
     return (
         <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
             <div style={{ display: 'flex', width: '100%', height: '100%' }}>
-                <Sidebar id={id} />
-                <div style={{ width: '75% ', height: '100%', position: 'relative' }} >
-                    <NavBar id={id} />
-                    <GroupNotes id={id} />
+                <Sidebar id={id} hidden={isHidden} />
+                <div style={{ width: isHidden ? (style ? '100%' : '0%') : "75%", height: '100%', position: 'relative', display: isHidden ? (style ? 'block' : "none") : 'block' }} >
+                    <NavBar id={id} hidden={isHidden} />
+                    <GroupNotes id={id} hidden={isHidden} />
                 </div>
             </div>
             {modal.groupModal && (

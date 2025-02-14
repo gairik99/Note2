@@ -4,7 +4,7 @@ import { createNote, updateNote, deleteNote } from "../../services/noteService";
 import { useNote } from "../context/noteContext";
 import { useAuth } from "../context/authContext";
 
-const GroupNotes = ({ id }) => {
+const GroupNotes = ({ id, hidden }) => {
     const { note, setNote } = useNote();
     const { user } = useAuth();
     const [notes, setNotes] = useState({});
@@ -146,7 +146,7 @@ const GroupNotes = ({ id }) => {
         <div
             style={{
                 width: "100%",
-                height: "92%",
+                height: "90%",
                 background: "#f5f5f4",
                 position: "relative",
             }}
@@ -155,6 +155,7 @@ const GroupNotes = ({ id }) => {
             {showConfirmation && (
                 <div
                     style={{
+                        padding: hidden ? "1rem" : "2rem",
                         position: "fixed",
                         top: 0,
                         left: 0,
@@ -165,6 +166,7 @@ const GroupNotes = ({ id }) => {
                         justifyContent: "center",
                         alignItems: "center",
                         zIndex: 1000,
+
                     }}
                 >
                     <div
@@ -244,8 +246,9 @@ const GroupNotes = ({ id }) => {
                             <div
                                 style={{
                                     display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
+                                    flexDirection: hidden ? "column" : "row",
+                                    alignItems: hidden ? "flex-start" : "center",
+                                    width: "100%",
                                 }}
                             >
                                 {editingNoteId === _id ? (
@@ -276,6 +279,7 @@ const GroupNotes = ({ id }) => {
                                             wordBreak: "break-word",
                                             whiteSpace: "normal",
                                             padding: "1rem",
+                                            maxWidth: "95%"
                                         }}
                                     >
                                         {note}
@@ -284,22 +288,21 @@ const GroupNotes = ({ id }) => {
                                 <div
                                     style={{
                                         display: "flex",
-                                        alignItems: "center",
-                                        gap: "0.5rem",
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        alignItems: "flex-end",
                                     }}
                                 >
                                     <div
                                         style={{
-                                            fontSize: "0.8rem",
+                                            fontSize: "0.6rem",
                                             color: "#555",
                                             display: "flex",
-                                            alignItems: "center",
+                                            felxDirection: "row",
                                             gap: "0.3rem",
                                         }}
                                     >
-                                        <span>{date}</span>
-                                        <span>•</span>
-                                        <span>{time}</span>
+                                        {date} • {time}
                                     </div>
                                     {editingNoteId === _id ? (
                                         <>

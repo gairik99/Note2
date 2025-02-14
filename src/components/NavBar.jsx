@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
+import { IoLogOutSharp } from "react-icons/io5";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { useGroup } from "../context/groupContext";
 import { useModal } from "../context/modalContext";
 import { useAuth } from "../context/authContext";
+import { useStyle } from "../context/styleContext";
+import '../style/NavBar.css';
 
-const NavBar = ({ id }) => {
+
+const NavBar = ({ id, hide, hidden }) => {
     let { group } = useGroup();
     let { setModal } = useModal();
-    let { user } = useAuth(); // Get user from context
+    let { user } = useAuth();
+    let { setStyle } = useStyle(); // Get user from context
     const [newGroup, setNewGroup] = useState({});
     const [dateTime, setDateTime] = useState(new Date());
-
+    // console.log('navbar', hidden);
     useEffect(() => {
         const nGroup = group?.find(({ _id }) => _id == id);
         setNewGroup(() => nGroup);
@@ -34,10 +40,10 @@ const NavBar = ({ id }) => {
     })}`;
 
     return (
-        <div style={{
+        <div className='main' style={{
+            display: user.token && hide ? 'none' : 'flex',
             height: '8vh',
             background: 'linear-gradient(135deg, #1E3A8A, #3B82F6)', // Gradient background
-            display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '0.5rem 2rem',
@@ -73,12 +79,12 @@ const NavBar = ({ id }) => {
                     <>
                         <div style={{
                             background: newGroup.color || '#4C51BF',
-                            height: '6.9vh',
-                            width: '10%',
+                            height: '4.5vh',
+                            width: '4.5vw',
                             border: "3px solid white",
                             borderRadius: '50%',
                             color: 'white',
-                            fontSize: '1.5rem',
+                            fontSize: hidden ? '0.5rem' : '1.2rem',
                             fontWeight: "bolder",
                             justifyContent: 'center',
                             alignItems: 'center',
@@ -90,8 +96,8 @@ const NavBar = ({ id }) => {
                         <p style={{
                             marginLeft: '1rem',
                             color: 'white',
-                            fontSize: '2rem',
-                            fontWeight: '700',
+                            fontSize: hidden ? '1rem' : '1.6rem',
+                            fontWeight: hidden ? '100' : '700',
                         }}>
                             {newGroup.fname}
                         </p>
@@ -99,7 +105,7 @@ const NavBar = ({ id }) => {
                 )}
             </div>
 
-            <div style={{ color: 'white', fontSize: '1.2rem', fontWeight: '500', marginRight: '0.8vw' }}>
+            <div style={{ color: 'white', fontSize: hidden ? '0.8rem' : '1.2rem', fontWeight: '500', marginRight: '0.8vw', padding: '2vw' }}>
                 {formattedDateTime}
             </div>
 
@@ -108,7 +114,7 @@ const NavBar = ({ id }) => {
                     <>
                         <button
                             style={{
-                                padding: '0.5rem 1.5rem',
+                                padding: '0.4rem 1.2rem',
                                 background: '#ECFEFF',
                                 color: '#1E293B',
                                 fontWeight: 'bold',
@@ -131,7 +137,7 @@ const NavBar = ({ id }) => {
                         </button>
                         <button
                             style={{
-                                padding: '0.5rem 1.5rem',
+                                padding: '0.4rem 1.2rem',
                                 background: '#ECFEFF',
                                 color: '#1E293B',
                                 fontWeight: 'bold',
@@ -155,32 +161,25 @@ const NavBar = ({ id }) => {
                     </>
                 ) : (
                     <>
-                        <div style={{ color: 'white', fontSize: '1.2rem', fontWeight: '500' }}>
-                            {user?.userName || 'User'}
-                        </div>
-                        <button
+                        <IoLogOutSharp
                             style={{
-                                padding: '0.5rem 1.5rem',
-                                background: '#ECFEFF',
-                                color: '#1E293B',
-                                fontWeight: 'bold',
-                                border: '2px solid #1E40AF',
-                                borderRadius: '0.5rem',
-                                cursor: 'pointer',
-                                transition: 'all 0.3s ease',
+                                fontSize: hide ? "1.5rem" : "2rem",
+                                color: "white",
+                                cursor: "pointer",
+                                transition: "transform 0.2s ease",
                             }}
-                            onMouseOver={(e) => {
-                                e.target.style.background = '#1E40AF';
-                                e.target.style.color = 'white';
-                            }}
-                            onMouseOut={(e) => {
-                                e.target.style.background = '#ECFEFF';
-                                e.target.style.color = '#1E293B';
-                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
                             onClick={() => setModal(prev => ({ ...prev, signoutModal: true }))}
-                        >
-                            Sign Out
-                        </button>
+                        />
+                        {id && hidden ? <IoMdArrowRoundBack onClick={() => setStyle(false)} style={{
+                            fontSize: hide ? "1.5rem" : "2rem",
+                            color: "white",
+                            cursor: "pointer",
+                            transition: "transform 0.2s ease",
+                        }}
+                            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")} /> : ""}
                     </>
                 )}
             </div>
